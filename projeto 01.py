@@ -7,7 +7,7 @@ import sqlite3
 item_vet = 0
 checkbox_selecionado = None
 
-
+print ("ola mundo")
 
 
 # criar banco de dados
