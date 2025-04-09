@@ -1,6 +1,6 @@
 import customtkinter
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import sqlite3
 
 
@@ -80,6 +80,7 @@ def ler_dados_mostrar(arg_scrollabelframe):
 
 
 def ler_dados_produto(arg_checkbox, arg_scrollabelframe):
+    global nome
     nome = arg_checkbox.strip("(),'")
     conexao = sqlite3.connect("dados.db")
     terminal_sql = conexao.cursor()
@@ -117,8 +118,7 @@ def seleciona_item(arg_item, arg_list):
     conexao = sqlite3.connect("dados.db")
     terminal_sql = conexao.cursor()
     terminal_sql.execute(f"SELECT * FROM itens WHERE nome = '{valor_checkbox}'")
-    receber_dados_produtos = terminal_sql.fetchall
-    editar_produto(receber_dados_produtos,arg_list)
+    ###editar_produto(receber_dados_produtos,arg_list)
     
 
 def deletar_produto(nome_produto):
@@ -134,27 +134,18 @@ def deletar_produto(nome_produto):
 
 
 
-
 def editar_produto(nome_produto,preco_produto,descricao_produto):
     conexao = sqlite3.connect("dados.db")
     terminalsql = conexao.cursor()
-    terminalsql.execute(f"UPDATE itens SET nome = '{nome_produto}',preco = '{preco_produto}', descricao = '{descricao_produto}' WHERE nome = '{valor_checkbox.get()}")
+    terminalsql.execute("UPDATE itens SET nome = ?, preco = ?, descricao = ? WHERE nome = ?", (nome_produto, preco_produto, descricao_produto, nome))
     conexao.commit()
     conexao.close()
     ctk_entry_nome_do_produto_frameeditar.delete(0, "end")
     ctk_entry_editarvalor_frameeditar.delete(0, "end")
-    textbox_editar_nome_frameeditar.delete(0.0,"end")
+    textbox_editar_nome_frameeditar.delete(0,"end")
     ler_dados_mostrar(scrollabel_lista_frameeditar)
-    
-    
-    
-
         
         
-
-
-
-
 
 
 criar_banco()
@@ -334,10 +325,6 @@ janela_principal.geometry("800x400")
 janela_principal.title("gerenciamento de maquinas agriculas")
 
 
-
-
-
-
 frame_menu = customtkinter.CTkFrame(janela_principal,width=190,height=380,corner_radius=0,fg_color="Gray")
 frame_menu.grid_propagate(False)
 frame_menu.grid(row=0, column= 0,padx=5,pady=10)
@@ -351,6 +338,7 @@ frame_cadastro.grid(row= 0,column=1,padx=5,pady=5)
 #frame da aba editar
 frame_de_editar = customtkinter.CTkFrame(janela_principal,width=590,height=380,corner_radius=0,fg_color="Gray")
 frame_de_editar.grid_propagate(False)
+
 
 # frame de saida
 frame_de_saida = customtkinter.CTkFrame(janela_principal,width=590,height=380,corner_radius=0,fg_color="Gray")
